@@ -1,0 +1,35 @@
+ {% extends "layout.html" %}
+
+{% block content %}
+<p>You searched for ...</p>
+{{searched}}
+   
+    <hr>
+  
+    
+    {% for user in users %}
+    <h1>User: {{ user.username }}</h1>
+    <h2>Email: {{ user.email }}</h2>
+    <p>{{ user.followers.count() }} followers, {{ user.followed.count() }} following</p>
+    {% if user == current_user %}
+    <p><a href="{{ url_for('account') }}">Edit your profile</a></p>
+    {% elif not current_user.is_following(user) %}
+    <p>
+        <form action="{{ url_for('follow', username=user.username) }}" method="post">
+            {{ form.hidden_tag() }}
+            {{ form.submit(value='Follow') }}
+        </form>
+    </p>
+    {% else %}
+    <p>
+        <form action="{{ url_for('unfollow', username=user.username) }}" method="post">
+            {{ form.hidden_tag() }}
+            {{ form.submit(value='Unfollow') }}
+        </form>
+    </p>
+    {% endif %}
+    {% endfor %}
+    <br>
+
+        
+{% endblock %}
